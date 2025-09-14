@@ -11,33 +11,42 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     font-family: sans-serif;
   }
+
+  /* Container for pages */
   .magazine {
     display: flex;
+    justify-content: center;
     width: 100%;
-    max-width: 1800px;
-    height: 90vh;
-    position: relative;
-    gap: 0; /* No gap between pages */
+    max-width: 1200px; /* fixed width for consistent desktop view */
+    height: auto;       /* natural height based on images */
+    gap: 0;             /* no space between pages */
   }
+
+  /* Each page */
   .page {
     flex: 1;
+    height: auto;       /* scale naturally */
     background: #000;
-    border-radius: 0; /* No rounding */
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: none; /* Remove shadow so pages touch */
+    border-radius: 0;
+    box-shadow: none;   /* remove shadows for seamless spread */
   }
+
   .page img {
     width: 100%;
-    height: 100%;
-    object-fit: contain; /* Keep full image visible */
+    height: auto;       /* maintain aspect ratio */
+    object-fit: contain; 
     background: #000;
+    display: block;
   }
+
+  /* Navigation buttons */
   .button {
     position: absolute;
     top: 50%;
@@ -54,17 +63,19 @@
   .prev { left: -60px; }
   .next { right: -60px; }
 
+  /* Mobile scaling */
   @media (max-width: 768px) {
     body {
-      height: auto;
+      min-height: auto;
       padding: 10px;
     }
     .magazine {
       width: 100%;
       height: auto;
-      gap: 0; /* no gap on mobile */
+      gap: 0;
     }
     .page {
+      flex: 1;
       height: auto;
     }
     .button.prev { left: 10px; }
@@ -96,13 +107,13 @@
     const left = document.getElementById('pageLeft');
     const right = document.getElementById('pageRight');
 
-    // First page: only right side
+    // First page: only right
     if (currentIndex === 0) {
       left.style.display = "none";
       right.style.display = "block";
       right.src = pages[0];
     }
-    // Last page: only left side
+    // Last page: only left
     else if (currentIndex === totalPages - 1) {
       left.style.display = "block";
       right.style.display = "none";
@@ -119,7 +130,7 @@
 
   function nextPage() {
     if (currentIndex === 0) {
-      currentIndex = 1; // jump to spread start
+      currentIndex = 1; // first spread
     } else if (currentIndex + 2 < totalPages) {
       currentIndex += 2;
     } else if (currentIndex + 1 < totalPages) {
