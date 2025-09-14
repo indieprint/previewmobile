@@ -20,13 +20,13 @@
     max-width: 1800px;
     height: 90vh;
     position: relative;
-    gap: 20px;
+    gap: 0px; /* Pages are touching */
   }
   .page {
     flex: 1;
     background: #000;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
-    border-radius: 6px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    border-radius: 0; /* No rounding to align pages */
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -35,7 +35,7 @@
   .page img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: contain; /* Full image visible */
     background: #000;
   }
   .button {
@@ -62,7 +62,7 @@
     .magazine {
       width: 100%;
       height: auto;
-      gap: 10px;
+      gap: 0px; /* keep gap at zero on mobile */
     }
     .page {
       height: auto;
@@ -96,13 +96,13 @@
     const left = document.getElementById('pageLeft');
     const right = document.getElementById('pageRight');
 
-    // First page: show only right side
+    // First page: show only right
     if (currentIndex === 0) {
       left.style.display = "none";
       right.style.display = "block";
       right.src = pages[0];
     }
-    // Last page: show only left side
+    // Last page: show only left
     else if (currentIndex === totalPages - 1) {
       left.style.display = "block";
       right.style.display = "none";
