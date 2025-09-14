@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Magazine Viewer</title>
 <style>
   body {
@@ -13,7 +13,6 @@
     align-items: center;
     min-height: 100vh;
     font-family: sans-serif;
-    overflow: hidden;
   }
 
   .magazine-container {
@@ -22,8 +21,6 @@
     margin: 0 auto;
     padding: 10px;
     position: relative;
-    overflow: hidden;
-    touch-action: none; /* allow pinch/zoom gestures */
   }
 
   .magazine {
@@ -31,8 +28,6 @@
     gap: 10px;
     width: 100%;
     height: 80vh;
-    transform-origin: center center;
-    transition: transform 0.2s ease-out;
   }
 
   .page {
@@ -50,7 +45,6 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    pointer-events: none; /* prevent dragging images */
   }
 
   .button {
@@ -70,22 +64,36 @@
   .prev { left: -50px; }
   .next { right: -50px; }
 
+  /* Mobile double-page layout */
   @media screen and (max-width: 768px) {
-    .magazine { height: 60vh; }
+    .magazine {
+      gap: 5px;
+      height: 60vh;       /* fit smaller screens */
+    }
+    .page {
+      border-radius: 4px;
+    }
     .button.prev { left: 5px; }
     .button.next { right: 5px; }
   }
 
+  /* Extra small phones */
   @media screen and (max-width: 480px) {
-    .magazine { height: 50vh; gap: 3px; }
-    .button { padding: 6px 10px; font-size: 14px; }
+    .magazine {
+      height: 50vh;       /* even smaller */
+      gap: 3px;
+    }
+    .button {
+      padding: 6px 10px;
+      font-size: 14px;
+    }
   }
 </style>
 </head>
 <body>
 
-<div class="magazine-container" id="magazineContainer">
-  <div class="magazine" id="magazine">
+<div class="magazine-container">
+  <div class="magazine">
     <div class="page"><img id="pageLeft" src="" alt="Page Left"></div>
     <div class="page"><img id="pageRight" src="" alt="Page Right"></div>
     <button class="button prev" onclick="prevPage()">◀</button>
@@ -103,54 +111,32 @@
   }
 
   let currentIndex = 0;
+
   function updatePages() {
     document.getElementById('pageLeft').src = pages[currentIndex] || '';
     document.getElementById('pageRight').src = pages[currentIndex + 1] || '';
   }
+
   function nextPage() {
-    if (currentIndex + 2 < pages.length) { currentIndex += 2; updatePages(); }
+    if (currentIndex + 2 < pages.length) {
+      currentIndex += 2;
+      updatePages();
+    }
   }
+
   function prevPage() {
-    if (currentIndex - 2 >= 0) { currentIndex -= 2; updatePages(); }
+    if (currentIndex - 2 >= 0) {
+      currentIndex -= 2;
+      updatePages();
+    }
   }
+
   window.addEventListener('keydown', e => {
     if (e.key === 'ArrowLeft') prevPage();
     if (e.key === 'ArrowRight') nextPage();
   });
+
   updatePages();
-
-  // Pinch zoom support
-  const magazine = document.getElementById('magazine');
-  let scale = 1, startDist = 0;
-
-  function getDistance(touches) {
-    const [a, b] = touches;
-    return Math.hypot(a.pageX - b.pageX, a.pageY - b.pageY);
-  }
-
-  document.getElementById('magazineContainer').addEventListener('touchstart', e => {
-    if (e.touches.length === 2) {
-      startDist = getDistance(e.touches);
-    }
-  });
-
-  document.getElementById('magazineContainer').addEventListener('touchmove', e => {
-    if (e.touches.length === 2) {
-      const newDist = getDistance(e.touches);
-      let pinchScale = newDist / startDist;
-      magazine.style.transform = `scale(${scale * pinchScale})`;
-      e.preventDefault();
-    }
-  });
-
-  document.getElementById('magazineContainer').addEventListener('touchend', e => {
-    if (e.touches.length < 2 && startDist !== 0) {
-      const newScale = parseFloat(magazine.style.transform.replace(/[^0-9.]/g,'')) || scale;
-      scale = Math.max(0.5, Math.min(newScale, 3)); // limit zoom between 0.5x and 3x
-      magazine.style.transform = `scale(${scale})`;
-      startDist = 0;
-    }
-  });
 </script>
 
 </body>
