@@ -13,6 +13,7 @@
     align-items: center;
     min-height: 100vh;
     font-family: sans-serif;
+    position: relative; /* needed for absolute buttons */
   }
 
   /* Container for pages */
@@ -41,7 +42,7 @@
   .page img {
     width: 100%;
     height: auto;       /* maintain aspect ratio */
-    object-fit: contain; 
+    object-fit: contain;
     background: #000;
     display: block;
   }
@@ -58,10 +59,10 @@
     cursor: pointer;
     border-radius: 8px;
     font-weight: bold;
-    z-index: 10;
+    z-index: 1000; /* ensure buttons are above pages */
   }
-  .prev { left: -60px; }
-  .next { right: -60px; }
+  .prev { left: 20px; }
+  .next { right: 20px; }
 
   /* Mobile scaling */
   @media (max-width: 768px) {
@@ -88,9 +89,10 @@
 <div class="magazine">
   <div class="page"><img id="pageLeft" src="" alt="Page Left"></div>
   <div class="page"><img id="pageRight" src="" alt="Page Right"></div>
-  <button class="button prev" onclick="prevPage()">◀</button>
-  <button class="button next" onclick="nextPage()">▶</button>
 </div>
+
+<button class="button prev" onclick="prevPage()">◀</button>
+<button class="button next" onclick="nextPage()">▶</button>
 
 <script>
   const folder = new URLSearchParams(window.location.search).get('magazine') || 'wnsep2';
