@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magazine Viewer</title>
+<style>
+  body {
+    margin: 0;
+    background: #111;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: sans-serif;
+  }
+
+  .magazine-container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 10px;
+    position: relative;
+  }
+
+  .magazine {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    height: 80vh;
+  }
+
+  .page {
+    flex: 1;
+    background: #fff;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .page img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(96,165,250,0.8);
+    color: #021024;
+    border: none;
+    padding: 12px 18px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-weight: bold;
+    z-index: 10;
+  }
+
+  .prev { left: -60px; }
+  .next { right: -60px; }
+
+  /* Mobile responsiveness */
+  @media screen and (max-width: 768px) {
+    .magazine {
+      flex-direction: column; /* stack pages vertically */
+      height: auto;           /* let container grow */
+      gap: 15px;              /* smaller gap */
+    }
+    .page {
+      width: 100%;           /* full width */
+      height: 60vh;          /* good readable height */
+    }
+    .button.prev { left: 10px; top: auto; bottom: 10px; transform: none; }
+    .button.next { right: 10px; top: auto; bottom: 10px; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="magazine-container">
+  <div class="magazine">
+    <div class="page"><img id="pageLeft" src="" alt="Page Left"></div>
+    <div class="page"><img id="pageRight" src="" alt="Page Right"></div>
+    <button class="button prev" onclick="prevPage()">◀</button>
+    <button class="button next" onclick="nextPage()">▶</button>
+  </div>
+</div>
+
+<script>
+  const folder = new URLSearchParams(window.location.search).get('magazine') || 'wnsep2';
+  const totalPages = 34; // adjust per folder
+  const pages = [];
+
+  for (let i = 1; i <= totalPages; i++) {
+    pages.push(`${folder}/${i}.jpg`);
+  }
+
+  let currentIndex = 0;
+
+  function updatePages() {
+    document.getElementById('pageLeft').src = pages[currentIndex] || '';
+    document.getElementById('pageRight').src = pages[currentIndex + 1] || '';
+  }
+
+  function nextPage() {
+    if (currentIndex + 2 < pages.length) {
+      currentIndex += 2;
+      updatePages();
+    }
+  }
+
+  function prevPage() {
+    if (currentIndex - 2 >= 0) {
+      currentIndex -= 2;
+      updatePages();
+    }
+  }
+
+  // Keyboard navigation
+  window.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') prevPage();
+    if (e.key === 'ArrowRight') nextPage();
+  });
+
+  // Initialize
+  updatePages();
+</script>
+
+</body>
+</html>
